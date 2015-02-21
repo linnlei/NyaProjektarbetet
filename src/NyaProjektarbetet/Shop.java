@@ -7,6 +7,8 @@ import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
+//21 feb
+
 public class Shop extends Room{
 	//private HashMap<Item, Integer> shopItems; //Integer = föremåls level
 	private HashMap<Item, Boolean> shopItems; //Boolean = får spelaren köpa föremålet?
