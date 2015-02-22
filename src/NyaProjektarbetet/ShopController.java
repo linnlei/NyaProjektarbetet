@@ -1,18 +1,15 @@
 package NyaProjektarbetet;
 
-import java.awt.event.*;
 
 import javax.swing.JOptionPane;
 
 public class ShopController {
-    private Shop model;
-    private PanelSklett  view;
+    private PanelSklett view;
     private GameEngine engine;
 
-    ShopController(Shop model, PanelSklett view, GameEngine engine) {
-        this.model = model; 	//model är alltså shop
+    ShopController(GameEngine engine, PanelSklett view) {
         this.view  = view;		//view är alltså panelskelettet
-        this.engine  = engine;	
+        this.engine  = engine;	//via engine kommer man åt shop, som är model
     }
     
     public void buyControl(String value, String clickedItem){

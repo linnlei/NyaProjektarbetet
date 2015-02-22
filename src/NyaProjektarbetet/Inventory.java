@@ -12,7 +12,7 @@ public class Inventory {
 	private HashMap<Item, Integer> items;
 	
 	public Inventory() {
-		items = new HashMap();
+		items = new HashMap<Item, Integer>();
 		createInventory();
 	}
 	

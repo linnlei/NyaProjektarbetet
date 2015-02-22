@@ -46,11 +46,10 @@ public class GameEngine {
         //shop = new Room();
         garden = new Room();
         minigame1 = new Room();
-        //Shop shop = new Shop(user.myInventory.getInventory(), user); //shop som lokal variabel
-        shop = new Shop(user.myInventory.getInventory(), user);
+        //Shop shop = new Shop(user.myInventory.getInventory(), user); 	//shop som lokal variabel
+        shop = new Shop(user.myInventory.getInventory(), user);			//shop som instansvariabel, förmodligen att föredra
 
-        //startar spelet i centrum
-        current = "center";
+        current = "center";		//startar spelet i centrum
     }
 	
 	public Shop getShop(){

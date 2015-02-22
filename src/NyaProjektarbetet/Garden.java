@@ -1,13 +1,13 @@
 package NyaProjektarbetet;
 
-import java.awt.Image;
+//import java.awt.Image;
 import java.util.HashMap;
 
 public class Garden extends Room{
 	//public HashMap<String, HashMap<Integer, Integer>> gardenItems;
 	public HashMap<Integer, HashMap<Integer, String>> gardenItems; //där int1 är x, int2 är y, string är föremålets namn el bild el liknande
-	private Item gardenItem; //vad är den här till?
-	private Image gardenPicture; //ska inte själva bildobjektet (Image) skapas i PanelSkelett?
+	//private Item gardenItem; //vad är den här till?
+	//private Image gardenPicture; //ska inte själva bildobjektet (Image) skapas i PanelSkelett?
 	
 	public Garden(){
 		gardenItems = new HashMap<Integer, HashMap<Integer, String>>();

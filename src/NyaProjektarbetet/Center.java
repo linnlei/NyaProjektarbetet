@@ -1,9 +1,9 @@
 package NyaProjektarbetet;
 
-import java.awt.Image;
+//import java.awt.Image;
 
 public class Center extends Room{
-	private Image centerPicture; //ska inte själva bildobjektet (Image) skapas i PanelSkelett?
+	//private Image centerPicture; //ska inte själva bildobjektet (Image) skapas i PanelSkelett?
 	
 	public Center(){
 		

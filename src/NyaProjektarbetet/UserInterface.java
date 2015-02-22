@@ -12,11 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 
@@ -26,15 +23,14 @@ import javax.swing.*;
 public class UserInterface {
 	private GameEngine engine;
 	private JFrame myFrame;
-	private JTextField entryField;
-	private JTextArea log;
+	//private JTextField entryField;
+	//private JTextArea log;
 	private String image;
 	private JButton exitButton;
 	private HashMap<String,JButton> exitButtons = new HashMap<String,JButton>();
 	private JPanelWithBackground panel;
 	private Room room;
 	public PanelSklett invisPanels;
-	private JPanel invisPanel;
 	private JPanelWithBackground background;
 	private UserInterface that = this; // ;-)
 	
@@ -72,9 +68,9 @@ public class UserInterface {
 		JButton startButton = new JButton ("Starta spel");
         startButton.setBounds(420,580,400,80);
         startButton.setContentAreaFilled(false);
-        startButton.setBorderPainted(false); //med eller utan kant
+        startButton.setBorderPainted(false); 		//med eller utan kant
         startButton.setFont(font);
-        startButton.setForeground(Color.pink); //färg på startknappen
+        startButton.setForeground(Color.pink); 		//färg på startknappen
         
         background.add(startButton);
 		myFrame.add(background);
@@ -94,17 +90,17 @@ public class UserInterface {
     }
 	
 	public void createMenu() {
-    	//Where the GUI is created:
+    	//GUI'n skapas
         JMenuBar menuBar;
         JMenu menu, submenu;
         JMenuItem menuItem;
         JRadioButtonMenuItem rbMenuItem;
         JCheckBoxMenuItem cbMenuItem;
 
-        //Create the menu bar.
+        //Menyn skapas
         menuBar = new JMenuBar();
 
-        //Build the first menu.
+        //Första menyn
         menu = new JMenu("Meny");
         menu.setMnemonic(KeyEvent.VK_A);
         menu.getAccessibleContext().setAccessibleDescription(
@@ -153,7 +149,7 @@ public class UserInterface {
         menu.add(menuItem);
 
 
-        //a group of radio button menu items
+        //Fler menydelar vi kanske kan vilja använda till något
         menu.addSeparator();
         ButtonGroup group = new ButtonGroup();
         rbMenuItem = new JRadioButtonMenuItem("A radio button menu item");
@@ -167,7 +163,7 @@ public class UserInterface {
         group.add(rbMenuItem);
         menu.add(rbMenuItem);
 
-        //a group of check box menu items
+        //Checkboxar
         menu.addSeparator();
         cbMenuItem = new JCheckBoxMenuItem("A check box menu item");
         cbMenuItem.setMnemonic(KeyEvent.VK_C);
@@ -177,7 +173,7 @@ public class UserInterface {
         cbMenuItem.setMnemonic(KeyEvent.VK_H);
         menu.add(cbMenuItem);
 
-        //a submenu
+        //Undermeny
         menu.addSeparator();
         submenu = new JMenu("A submenu");
         submenu.setMnemonic(KeyEvent.VK_S);
@@ -191,7 +187,7 @@ public class UserInterface {
         submenu.add(menuItem);
         menu.add(submenu);
 
-        //Build second menu in the menu bar.
+        //En andra meny i menyn
         menu = new JMenu("Inställningar");
         menu.setMnemonic(KeyEvent.VK_N);
         menu.getAccessibleContext().setAccessibleDescription(
@@ -200,7 +196,7 @@ public class UserInterface {
 
         myFrame.setJMenuBar(menuBar);
         
-      //Build second menu in the menu bar.
+        //En tredje meny i menyn
         menu = new JMenu("Hjälp");
         menu.setMnemonic(KeyEvent.VK_N);
         menu.getAccessibleContext().setAccessibleDescription(
@@ -259,10 +255,10 @@ public class UserInterface {
 	 
 	 private void addBorderLayout(JPanel pa, String current)
 	 {
-		 	int i = 0;
+		 	//int i = 0;
 		 	String nextRoom = "Centrum";
 		 	if("center".equals(current)){ nextRoom = "Affär";}
-		 	final int j = i;
+		 	//final int j = i;
 		 	final String c = current;
 		 			 	
 		 	exitButton = new JButton("Exit");
@@ -270,8 +266,6 @@ public class UserInterface {
 	        JButton mapButton = new JButton("Karta");
 	        JButton button4 = new JButton("Föremål");
 	        JButton button5 = new JButton("Pengar");
-	        JButton button6 = new JButton("Föremål");
-	        JButton button7 = new JButton("Pengar"); 
 	        
 	        //String image ="pictures/startbackground.jpg";
 	                
@@ -279,10 +273,12 @@ public class UserInterface {
 	        double width = screenSize.getWidth();
 	        double height = screenSize.getHeight();
 	        
+	        /*------Dessa kan bli användbara för skalning, ta ej bort!
 	        double textHeight = height * 0.15;
 	        double textWidth = height * 0.15;
 	        double imgWidth = width * 0.9;
 	        double imgHeight = height * 0.9;
+	        */
 	        
 	        JPanel p = new JPanel(new GridLayout(4,1));
 	        JPanel p2 = new JPanel(new GridLayout(4,1));
@@ -301,28 +297,21 @@ public class UserInterface {
 	        panel.add(p2, BorderLayout.EAST);
 	        panel.add(b, BorderLayout.NORTH);
 	       
-	        
 	        panel.setPreferredSize(new Dimension((int)width, (int)height)); //bildstorlek, gör om till att skala
 	        panel.setMinimumSize(new Dimension((int)width, (int)height)); //istället för att skära av
 	        
 	        myFrame.getContentPane().add(panel, BorderLayout.NORTH);
 	        
 	       button2.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					// TODO Auto-generated method stub
 					if("center".equals(c)){
 					that.changeRoom("shop");
 					}
 					else that.changeRoom("center");
-					
-					
 				}
 			});
-	       
-	            
-	        	
+	       	
 	        exitButton.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent event) {
@@ -347,9 +336,7 @@ public class UserInterface {
 		  panel.add(invisPanels.getPanel(engine.getCurrent()), BorderLayout.CENTER); //room.getRoomPanel("Shop"/*engine.getCurrent()*/));
 		  myFrame.add(panel);			
 		  myFrame.pack();
-		  //myFrame.setVisible(true);
-		  
-		    
+		  //myFrame.setVisible(true);   
 	 }
 	 
 	 public void changeRoom(String current)
@@ -361,7 +348,6 @@ public class UserInterface {
 		 else room = invisPanels.miniGame1;
 		 
 		 setJPanelWithBackground(room.getPicture(engine.getCurrent()));
-		 
 	 }
 	 
 

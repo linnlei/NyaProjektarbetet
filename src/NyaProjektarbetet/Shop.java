@@ -1,18 +1,12 @@
 package NyaProjektarbetet;
 
-import java.awt.Image;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import javax.swing.JOptionPane;
 
-//21 feb
 
 public class Shop extends Room{
-	//private HashMap<Item, Integer> shopItems; //Integer = föremåls level
 	private HashMap<Item, Boolean> shopItems; //Boolean = får spelaren köpa föremålet?
-	private Image shopPicture; //ska inte själva bildobjektet (Image) skapas i PanelSkelett?????
 	private Player player;
 	
 	public Shop(HashMap<Item, Integer> inventory, Player player){
@@ -33,21 +27,12 @@ public class Shop extends Room{
 	
 	private void updateShop(){
 		
-		for(Item item : shopItems.keySet() ){
+		for(Item item : shopItems.keySet() ){				//Går igenom alla föremål
 			if(player.getLevel() >= item.getItemLevel()){	//Kollar om spelarens level >= föremålens level
-				shopItems.put(item, true);		//Sätter att föremål får köpas om ens level är tillräckligt högt
+				shopItems.put(item, true);					//Sätter att föremål får köpas om ens level är tillräckligt högt
 			}
 		}
 		
-		//*****Test-popup för att kolla så levelsystemet för föremål funkar
-		/*for(Item item : shopItems.keySet() ){
-			JOptionPane.showMessageDialog(null, shopItems.get(item), "", JOptionPane.INFORMATION_MESSAGE);
-		}*/
-		
-		/*
-		for(Item item : shopItems.keySet() ){
-			JOptionPane.showMessageDialog(null, item.getItemPrice(), "", JOptionPane.INFORMATION_MESSAGE);
-		}*/
 	}
 	
 	public void calculatePrice(Item boughtItem, int numberOfItems){
@@ -75,7 +60,7 @@ public class Shop extends Room{
 		else{
 			JOptionPane.showMessageDialog(null, "... men du har för lågt level.", "", JOptionPane.INFORMATION_MESSAGE);
 		}
-		
 	}
 
+	
 }

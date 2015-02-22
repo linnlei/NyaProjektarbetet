@@ -1,6 +1,6 @@
 package NyaProjektarbetet;
 
-import javax.swing.JPanel;
+//import javax.swing.JPanel;
 
 public class Room {
 	//Tillfällig kod för att det ska kompilera
