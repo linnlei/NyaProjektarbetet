@@ -5,52 +5,54 @@ import java.awt.event.*;
 import javax.swing.JOptionPane;
 
 public class ShopController {
-    //... The Controller needs to interact with both the Model and View.
     private Shop model;
     private PanelSklett  view;
+    private GameEngine engine;
 
-    //========================================================== constructor
-    /** Constructor */
-    ShopController(Shop model, PanelSklett view) {
-        this.model = model;
-        this.view  = view;
+    ShopController(Shop model, PanelSklett view, GameEngine engine) {
+        this.model = model; 	//model är alltså shop
+        this.view  = view;		//view är alltså panelskelettet
+        this.engine  = engine;	
     }
     
-    public void buyControl(String value){
-    	//I controllern:
-		//om det är null, ingen varningstext och inget händer
-		//kolla så det är siffror man skrivit in, annars varningstext
-		//kolla så man har råd, annars varningstext)
-    	
-    	
-    	if( isInteger(value) ){
-    		JOptionPane.showMessageDialog(null, "Du vill köpa stycken.", "KÖP", JOptionPane.OK_CANCEL_OPTION);
+    public void buyControl(String value, String clickedItem){
+	
+    	if( isInteger(value) ){		//Om man skrivit in siffror, fortsätter med kontrollen
+    		JOptionPane.showMessageDialog(null, "Du vill köpa " + value + " stycken.", "KÖP", JOptionPane.OK_CANCEL_OPTION);
+    		moneyControl(value, clickedItem);
     	}
-    	else if (value == null){
-    		
+    	else if (value == null){ 	//Om insträngen är null
+    		JOptionPane.showMessageDialog(null, "Skriv in ett antal du vill köpa!", "KÖP", JOptionPane.OK_CANCEL_OPTION);
     	}
+    	else{ 	//Om man skrivit in något annat än siffror
+    		JOptionPane.showMessageDialog(null, "Du måste skriva in siffror!", "KÖP", JOptionPane.OK_CANCEL_OPTION);
+    	}
+    }
+    
+    public void moneyControl(String value, String clickedItem){
+    	
+    	Item boughtItem = new Item(0, 1, "BrickBlue.png", "null"); //skapa temporärt föremål som skrivs över
+    	
+    	for(Item item : engine.shop.getShopItems().keySet() ){ //letar upp föremålet med rätt namn
+    		if(clickedItem == item.getItemName()){
+    			boughtItem = item;
+    		}
+    	}
+    	
+    	engine.shop.calculatePrice(boughtItem, Integer.parseInt(value));	//anropar köpmetoderna i shop
     	
     }
     
-	public static boolean isInteger(String s) {
+	public static boolean isInteger(String s) {	//kollar om insträng är en integer
 	    try { 
 	        Integer.parseInt(s); 
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
-	    // only got here if we didn't return false
-	    return true;
+	    return true; 	    // man kommer bara hit om man inte redan returnerat false
 	}
 
-    /*
-    ////////////////////////////////////////// inner class MultiplyListener
-     When a multiplication is requested.
-     //  1. Get the user input number from the View.
-     //  2. Call the model to multiply by this number.
-     //  3. Get the result from the Model.
-     //  4. Tell the View to display the result.
-     // If there was an error, tell the View to display it.
-     
+    /* -----------Man kan även göra inre klasser som implementerar actionlistener. Vore detta mer korrekt?
     class MultiplyListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String userInput = "";
@@ -63,13 +65,8 @@ public class ShopController {
             	view.showError("Bad input: '" + userInput + "'");
             }
         }
-    }//end inner class MultiplyListener
+    }
 
-
-    //////////////////////////////////////////// inner class ClearListener
-     //1. Reset model.
-      //  2. Reset View.
-      //   
     class ClearListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	model.reset();

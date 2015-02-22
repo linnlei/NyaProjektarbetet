@@ -52,4 +52,9 @@ public class GameEngine {
         //startar spelet i centrum
         current = "center";
     }
+	
+	public Shop getShop(){
+		return shop;
+	}
+	
 }

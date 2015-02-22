@@ -43,6 +43,7 @@ public class UserInterface {
         engine = gameEngine;
         //createGUI();
         //room = new Room();
+        
         invisPanels = new PanelSklett(engine, this);
     }
     

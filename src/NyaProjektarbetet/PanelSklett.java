@@ -28,6 +28,8 @@ public class PanelSklett {
 	public Room miniGame2;
 	JPanel panelClickable;
 	private UserInterface ui;
+	private ShopController shopControl;
+	private ArrayList<JButton> itemButtons = new ArrayList<JButton>();
 	
 	public PanelSklett(GameEngine e, UserInterface ui)
 	{
@@ -37,6 +39,9 @@ public class PanelSklett {
 		//shop = new Shop(user.myInventory.getInventory());
 		garden = new Garden();
 		miniGame1 = new MiniGame();
+		shopControl = new ShopController(shop, this, engine);
+		//shopControl = new ShopController(engine.getShop(), this, engine);
+		this.shopControl = shopControl;
 	}
 	
 	private JPanel getInventoryPanel()
@@ -103,10 +108,11 @@ public class PanelSklett {
 		HashMap<Item, Boolean> shopItems = engine.shop.getShopItems();
 		//HashMap<Item, Boolean> shopItems = shop.getShopItems();
 		
+		//ShopController shopControl = new ShopController(engine.shop, this);
+		
 		JPanel panel = new JPanel();    
 		JPanel gridPanel = new JPanel(); 
 		JPanel downPanel = new JPanel(); 
-		ArrayList<JButton> itemButtons = new ArrayList<JButton>();
 		
 	    panel.setOpaque(false);
 	    gridPanel.setOpaque(false);
@@ -134,13 +140,21 @@ public class PanelSklett {
 	    	JButton tempButton = new JButton (item.getItemName(), icon);
 	    	tempButton.setContentAreaFilled(false);
 	    	tempButton.setBorderPainted(false);
+
 	    	
 	    	tempButton.addActionListener(new ActionListener()  {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					//JOptionPane.showMessageDialog(null, arg0.getSource().hashCode(), "KÖP", JOptionPane.OK_CANCEL_OPTION);
+					//arg0.getSource();
+					String clickedItem = new String();
+					for(JButton button : itemButtons){
+						if(arg0.getSource().equals(button)){
+							clickedItem = button.getText();
+						}
+					}
 					String inputValue = JOptionPane.showInputDialog("Hur många vill du köpa?");
-					JOptionPane.showMessageDialog(null, "Du vill köpa " + inputValue + " stycken.", "21 feb", JOptionPane.OK_CANCEL_OPTION);
-					//anropa controllern med inputValue som argument (antal man vill köpa)
+					shopControl.buyControl(inputValue, clickedItem);
 				}
 			});
 	    	
