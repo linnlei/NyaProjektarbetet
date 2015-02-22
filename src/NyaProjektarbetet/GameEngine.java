@@ -8,8 +8,12 @@ import javax.swing.*;
 public class GameEngine {
 	private Player user;
 	private UserInterface gui;
+	//Current room:
 	private String current;
+	private Room currentRoom;
+	//Rum:
 	public Shop shop;
+	public Room center, garden, minigame1;
 	
 	public GameEngine() {
 		user = new Player();
@@ -22,6 +26,10 @@ public class GameEngine {
 		return current;
 	}
 	
+	public Room getCurrentRoom() {	//som getCurrent fast med Room ist.
+		return currentRoom;
+	}
+	
 	public Player getPlayer(){
 		return user;
 	}
@@ -29,6 +37,10 @@ public class GameEngine {
 	//Jag la till denna /Jenny
 	public void setCurrent(String room) {
 		current = room;
+	}
+	
+	public void setCurrentRoom(Room room) {
+		currentRoom = room;
 	}
 	
 	public void printWelcome() {
@@ -39,13 +51,13 @@ public class GameEngine {
 	}
 	
 	private void createRooms() {
-        Room center, garden, minigame1;
+        //Room center, garden, minigame1;
         //Room shop;
       
         center = new Room();
-        //shop = new Room();
-        garden = new Room();
+        garden = new Garden();
         minigame1 = new Room();
+        //shop = new Room();
         //Shop shop = new Shop(user.myInventory.getInventory(), user); 	//shop som lokal variabel
         shop = new Shop(user.myInventory.getInventory(), user);			//shop som instansvariabel, förmodligen att föredra
 
@@ -55,5 +67,25 @@ public class GameEngine {
 	public Shop getShop(){
 		return shop;
 	}
+	
+	 public void changeRoom(String current)
+	 {
+		 Room room; //tillfälligt rum för rumsbyte
+		 
+		 setCurrent(current);
+		 if(current.equals("Center")) room = center; 
+		 else if(current.equals("Shop")) room = shop;
+		 else if(current.equals("Garden")) room = garden;
+		 else room = minigame1;
+		 
+		 gui.setJPanelWithBackground(room.getPicture(getCurrent()));
+	 }
+	 
+	 
+	 public void changeCurrentRoom(Room current)	//rumsreferenser ist. för strängar. krävs dock många kodändringar om denna ska funka
+	 {
+		 setCurrentRoom(current);
+		 //setJPanelWithBackground(current.getPicture(engine.getCurrentRoom()));	//ex behöver getpicture ändras isåfall
+	 }
 	
 }

@@ -23,23 +23,22 @@ import javax.swing.*;
 public class UserInterface {
 	private GameEngine engine;
 	private JFrame myFrame;
-	//private JTextField entryField;
-	//private JTextArea log;
 	private String image;
 	private JButton exitButton;
-	private HashMap<String,JButton> exitButtons = new HashMap<String,JButton>();
 	private JPanelWithBackground panel;
-	private Room room;
 	public PanelSklett invisPanels;
 	private JPanelWithBackground background;
-	private UserInterface that = this; // ;-)
+	//private JTextField entryField;
+	//private JTextArea log;
+	//private HashMap<String,JButton> exitButtons = new HashMap<String,JButton>();
+	//private UserInterface that = this; // ;-)
+	//private Room room;
 	
     public UserInterface(GameEngine gameEngine)
     {
         engine = gameEngine;
         //createGUI();
         //room = new Room();
-        
         invisPanels = new PanelSklett(engine, this);
     }
     
@@ -53,13 +52,20 @@ public class UserInterface {
 		background.setLayout(null);
 		Font font = new Font("Viner Hand ITC", Font.BOLD, 50);
 		
-		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenSize.setSize( screenSize.getWidth() , (screenSize.getHeight() - 30) ); //-30 kompenserar för windows-menybaren
         //double width = screenSize.getWidth();
         //double height = screenSize.getHeight();
         
 		//Frame har en bestämd storlek 1280x800. Kan finnas kvar tills man implementerar resize-funktion för JButton
-        myFrame.setPreferredSize(new Dimension(1280, 800));
-        myFrame.setMinimumSize(new Dimension(1280, 800));
+        /*myFrame.setPreferredSize(new Dimension(1280, 750));	
+        myFrame.setMinimumSize(new Dimension(1280, 750));
+        myFrame.setResizable(false);
+        myFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);*/
+        
+        //Ska vi ha såhär så att det skalar istället? Eller blev det något problem med JButton då? (enligt kommentaren här ovanför...)
+        myFrame.setPreferredSize(screenSize);	
+        myFrame.setMinimumSize(screenSize);
         myFrame.setResizable(false);
         myFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
@@ -81,8 +87,9 @@ public class UserInterface {
             public void actionPerformed(ActionEvent event) {
                 //starta spel här
             	createGUI();
-            	engine.printWelcome();}
-            	
+            	engine.printWelcome();
+            	engine.changeRoom("center");
+            }	
         });
 		
         myFrame.pack();
@@ -226,8 +233,9 @@ public class UserInterface {
 	
 	 public void createGUI() {
 		
-	        //entryField = new JTextField(34);
 	        image ="pictures/startbackground.jpg";
+	        
+	        //entryField = new JTextField(34);
 	        /*
 	        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	        double width = screenSize.getWidth();
@@ -242,13 +250,14 @@ public class UserInterface {
 	        myFrame.setMinimumSize(new Dimension((int)width, (int)height));
 	        myFrame.setResizable(false);
 	        myFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	        
+	        entryField.requestFocus();
 	         */	
 	        panel = new JPanelWithBackground(image); 
 	        addBorderLayout(panel, engine.getCurrent());
 	        //createMenu();
 	       	               	        
 	        myFrame.pack();
-	        //entryField.requestFocus();
 	              
 	        
 	    }
@@ -264,8 +273,8 @@ public class UserInterface {
 		 	exitButton = new JButton("Exit");
 	        JButton button2 = new JButton(nextRoom);
 	        JButton mapButton = new JButton("Karta");
-	        JButton button4 = new JButton("Föremål");
-	        JButton button5 = new JButton("Pengar");
+	        JButton itemButton = new JButton("Föremål");
+	        JButton moneyButton = new JButton("Pengar");
 	        
 	        //String image ="pictures/startbackground.jpg";
 	                
@@ -285,11 +294,14 @@ public class UserInterface {
 	        JPanel b = new JPanel();
 	        b.setLayout(new BoxLayout(b, BoxLayout.X_AXIS));
 
-	        p.add(button2);
-	        p.add(mapButton);
-	        p.add(exitButton);
-	        b.add(button4);
-	        b.add(button5);
+	        //p.add(button2);
+	        //p.add(mapButton);
+	        //p.add(exitButton);
+	        b.add(itemButton);
+	        b.add(moneyButton);
+	        b.add(button2);
+	        b.add(mapButton);
+	        b.add(exitButton);
 	        
 	        panel.setLayout(new BorderLayout());
 	        //panel.add(textBox, BorderLayout.AFTER_LAST_LINE);
@@ -306,9 +318,13 @@ public class UserInterface {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if("center".equals(c)){
-					that.changeRoom("shop");
+					//that.changeRoom("shop");
+					//engine.changeCurrentRoom(engine.shop);		//rumsreferenser ist. för strängar
+					engine.changeRoom("shop");				//flyttat till engine
 					}
-					else that.changeRoom("center");
+					//else that.changeRoom("center");
+					//else engine.changeCurrentRoom(engine.center);		//rumsreferenser ist. för strängar
+					else engine.changeRoom("center");				//flyttat till engine
 				}
 			});
 	       	
@@ -322,12 +338,12 @@ public class UserInterface {
 	        mapButton.addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent event) {
-	            	System.exit(0);
+	            	JOptionPane.showMessageDialog(null, "Du är i " + engine.getCurrent(), "Karta", JOptionPane.INFORMATION_MESSAGE);
 	            }
 	        });
 	 }
 	 
-	 private void setJPanelWithBackground(String i)
+	 public void setJPanelWithBackground(String i)
 	 {
 		  myFrame.remove(panel);
 		  panel = new JPanelWithBackground(i);
@@ -339,16 +355,29 @@ public class UserInterface {
 		  //myFrame.setVisible(true);   
 	 }
 	 
+	 /*
 	 public void changeRoom(String current)
 	 {
+		 //Eftersom rumsbyte är mer logik än grafik, har jag flyttat rummen till gameengine. så den här koden behövs inte egentligen
+		  * 
+		  * 
+		  * 
+		 //engine.setCurrent(current);
+		 //if(current.equals("Center")) room = invisPanels.center; 
+		 //else if(current.equals("Shop")) room = invisPanels.shop;
+		 //else if(current.equals("Garden")) room = invisPanels.garden;
+		 //else room = invisPanels.miniGame1;
+		 
+		 //setJPanelWithBackground(room.getPicture(engine.getCurrent()));
+		 
 		 engine.setCurrent(current);
-		 if(current.equals("Center")) room = invisPanels.center; 
-		 else if(current.equals("Shop")) room = invisPanels.shop;
-		 else if(current.equals("Garden")) room = invisPanels.garden;
-		 else room = invisPanels.miniGame1;
+		 if(current.equals("Center")) room = engine.center; 
+		 else if(current.equals("Shop")) room = engine.shop;
+		 else if(current.equals("Garden")) room = engine.garden;
+		 else room = engine.minigame1;
 		 
 		 setJPanelWithBackground(room.getPicture(engine.getCurrent()));
-	 }
+	 }*/
 	 
 
 }

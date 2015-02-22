@@ -3,6 +3,7 @@ package NyaProjektarbetet;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 //import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,23 +19,23 @@ import javax.swing.JPanel;
 
 public class PanelSklett {
 	private GameEngine engine;
-	public Room center;
-	public Shop shop;
-	public Room garden;
-	public Room miniGame1;
-	public Room miniGame2;
-	JPanel panelClickable;
+	private JPanel panelClickable;
 	private UserInterface ui;
 	private ShopController shopControl;
 	private ArrayList<JButton> itemButtons = new ArrayList<JButton>();
+	
+	//public Room center;
+	//public Shop shop;
+	//public Room garden;
+	//public Room miniGame1;
 	
 	public PanelSklett(GameEngine e, UserInterface ui)
 	{
 		engine = e;
 		this.ui = ui;
-		center = new Center();		//tror att alla rum borde skapas som instansvariabler i GameEngine istället
-		garden = new Garden();		//tror att alla rum borde skapas som instansvariabler i GameEngine istället
-		miniGame1 = new MiniGame();	//tror att alla rum borde skapas som instansvariabler i GameEngine istället
+		/*center = new Center();		//har flyttat dessa till gameengine istället
+		garden = new Garden();		
+		miniGame1 = new MiniGame();	*/
 		shopControl = new ShopController(engine, this);
 	}
 	
@@ -66,26 +67,52 @@ public class PanelSklett {
 	    panel.setOpaque(false);
 	    //panel.setLayout(new GridLayout(4,4));
 	    panel.setLayout(null);
-	    JButton clickButton = new JButton ("Affär");
+	    
+
+	    //Tar in skyltbilden, skalar om den, sätter som ikon till JButton
+    	URL imageURL = this.getClass().getClassLoader().getResource("skylt.png");
+    	ImageIcon icon = new ImageIcon(imageURL);
+	    Image img = icon.getImage();
+	    Image newimg = img.getScaledInstance(200, 100,  java.awt.Image.SCALE_SMOOTH);
+	    ImageIcon newIcon = new ImageIcon(newimg);
+	    
+	    JButton clickButton = new JButton ("Affär", newIcon);
+	    clickButton.setHorizontalTextPosition(JButton.CENTER);
+	    clickButton.setVerticalTextPosition(JButton.CENTER);
+	    
 	    clickButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				ui.changeRoom("shop");
+				//ui.changeRoom("shop");					//strängar ist. för rumsreferenser
+				//engine.changeCurrentRoom(engine.shop);	//rumsreferenser ist. för strängar
+				engine.changeRoom("shop");				//flyttat till engine
 				
 			}
 		});
-	    clickButton.setBounds(4,6,200,400);
+	    clickButton.setBounds(200,100,200,100); //x,y,width,height
 	    clickButton.setContentAreaFilled(false);
-	    clickButton.setBorderPainted(false); //med eller utan kant
+	    //clickButton.setBorderPainted(false); //med eller utan kant
 	    panel.add(clickButton);
 	    
-	    JButton clickButton2 = new JButton ("Skylt2");
+	    JButton clickButton2 = new JButton ("Trädgård");
 	    clickButton2.setBounds(300,400,200,200);
 	    clickButton2.setContentAreaFilled(false);
 	    //clickButton.setBorderPainted(false); //med eller utan kant
 	    panel.add(clickButton2);
+	    
+	    clickButton2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				//ui.changeRoom("garden");					//strängar ist. för rumsreferenser
+				//engine.changeCurrentRoom(engine.garden);	//rumsreferenser ist. för strängar
+				engine.changeRoom("garden");				//flyttat till engine
+				
+			}
+		});
 	    
 	   	    
 	    return panel;
@@ -162,7 +189,9 @@ public class PanelSklett {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ui.changeRoom("center");
+				//ui.changeRoom("center");
+				//engine.changeCurrentRoom(engine.center);		//rumsreferenser ist. för strängar
+				engine.changeRoom("center");				//flyttat till engine
 				
 			}
 		});
@@ -176,7 +205,9 @@ public class PanelSklett {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ui.changeRoom("garden");
+				//ui.changeRoom("garden");
+				//engine.changeCurrentRoom(engine.garden);		//rumsreferenser ist. för strängar
+				engine.changeRoom("garden");				//flyttat till engine
 				
 			}
 		});
