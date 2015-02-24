@@ -1,6 +1,8 @@
 package NyaProjektarbetet;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
 	private String userName;
 	private int level;
 	private int money;

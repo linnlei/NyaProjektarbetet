@@ -17,8 +17,18 @@ import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+
+
+//import java.awt.Image;
+import javax.swing.JTextField;
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 /*
 import minTestzon.Center;
@@ -38,6 +48,7 @@ public class PanelSklett implements Observer{
 	private UserInterface ui;
 	private ShopController shopControl;
 	private ArrayList<JButton> itemButtons = new ArrayList<JButton>();
+	private Inventory inventoryItems = new Inventory();
 	
 	/*public Room center;
 	public Room shop;
@@ -72,12 +83,13 @@ public class PanelSklett implements Observer{
 		gardenController.addObserver(this);
 	}
 	
+	/*
 	private JPanel getInventoryPanel()
 	{
 		panelClickable = createInventoryPanel();
 		return panelClickable;
 		
-	}
+	}*/
 	
 	 private void reSize(int windowchanges)
 	 {
@@ -254,7 +266,7 @@ public class PanelSklett implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Insert inventory", "Ryggsäck", JOptionPane.INFORMATION_MESSAGE);
+				createInventoryPanel();
 				
 			}
 		});
@@ -430,22 +442,54 @@ public class PanelSklett implements Observer{
 	     
 	}
 	
+	//*************************************************************************************************
+	//*************************************INVENTORY-PANEL START***************************************
+	//*************************************************************************************************
+	
+	
+	//Ganska klart förutom layouten
+		public void createInventoryPanel()
+		{
+			JFrame inventory = new JFrame("Ryggsäck");
+			//HashMap<Item, Integer> items = inventoryItems.getInventory();
+			HashMap<Item, Integer> items = engine.getPlayer().myInventory.getInventory();
+			
+			JPanelWithBackground invBG = new JPanelWithBackground("pictures/sno.jpg");
+			inventory.add(invBG);
+			invBG.setLayout(new GridLayout(4,4,1,1));
+			
+			
+			
+			for (Entry<Item, Integer> entry : items.entrySet() ) {
+			//for (HashMap.Entry<Item, Integer> entry : items.entrySet() ) {
+			    //Item item = entry.getKey();
+			    //Object amount = entry.getValue();
+				//ImageIcon iconapprove = new ImageIcon(entry.getKey().getItemPicture());
+				
+				URL imageURL = this.getClass().getClassLoader().getResource(entry.getKey().getItemPicture());
+				ImageIcon iconapprove = new ImageIcon(imageURL);
+				
+				JLabel imglabelapprove1 = new JLabel(entry.getValue().toString());
+			    imglabelapprove1.setIcon(iconapprove);
+			    imglabelapprove1.setHorizontalAlignment(JLabel.CENTER);
+			    invBG.add(imglabelapprove1);
+			}
+			
+			inventory.pack();
+			inventory.setVisible(true);
+		}
+	
+	
+	//*************************************************************************************************
+	//*************************************INVENTORY-PANEL END*****************************************
+	//*************************************************************************************************
+	
 	
 	
 	private JPanel createMiniGamePanel()
 	{
 		JPanel panel = new JPanel();
 		
-		panel.setOpaque(false);
-	    panel.setLayout(null);
-		
-		return panel;
-		
-	}
-	
-	private JPanel createInventoryPanel()
-	{
-		JPanel panel = new JPanel();	
 		panel.setOpaque(false);
 	    panel.setLayout(null);
 		

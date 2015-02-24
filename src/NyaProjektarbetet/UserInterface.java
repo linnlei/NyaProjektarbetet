@@ -132,12 +132,24 @@ public class UserInterface {
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_1, ActionEvent.ALT_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription(
-                "This doesn't really do anything");
+                "Öppnar ditt spel (förhoppningsvis)");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	engine.load();
+            }
+        });
         menu.add(menuItem);
         
         //Spara en fil
         menuItem = new JMenuItem("Spara", new ImageIcon("image.gif"));
         menuItem.setMnemonic(KeyEvent.VK_D);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	engine.save();
+            }
+        });
         menu.add(menuItem);
         
         //Avsluta
@@ -314,6 +326,7 @@ public class UserInterface {
 	        
 	        myFrame.getContentPane().add(panel, BorderLayout.NORTH);
 	        
+	        
 	       button2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -339,6 +352,13 @@ public class UserInterface {
 	            @Override
 	            public void actionPerformed(ActionEvent event) {
 	            	JOptionPane.showMessageDialog(null, "Du är i " + engine.getCurrent(), "Karta", JOptionPane.INFORMATION_MESSAGE);
+	            }
+	        });
+	        
+	        itemButton.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent event) {
+	            	invisPanels.createInventoryPanel();
 	            }
 	        });
 	 }

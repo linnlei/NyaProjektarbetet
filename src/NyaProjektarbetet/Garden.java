@@ -1,11 +1,13 @@
 package NyaProjektarbetet;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.HashMap;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-public class Garden extends Room{
+public class Garden extends Room implements Serializable{
 	//public HashMap<String, HashMap<Integer, Integer>> gardenItems;
 	public HashMap<Integer, ImageIcon> gardenItems; //där Integer är löpnummer och Icon Items bild 
 	//public HashMap<Integer, HashMap<Integer, String>> gardenItems; //där int1 är x, int2 är y, string är föremålets namn el bild el liknande

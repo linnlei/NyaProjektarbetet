@@ -21,28 +21,58 @@ public class GameEngine {
 	public Shop shop;
 	public Room center, garden, minigame1;
 	
+	
 	public static class State implements Serializable{
 		//Player, Garden, Inventory ska vara Serializable för att kunna skrivas till fil
 		Player player = new Player();
-		Garden gard = new Garden();
+		Room gard = new Garden();
 		Inventory inven = new Inventory();
+		
+		public Player getSavedPlayer(){
+			return player;
+		}
+		public void setStatePlayer(Player user){
+			player = user;
+		}
+		
+		public Room getSavedGarden(){
+			return gard;
+		}
+		public void setStateGarden(Room garden){
+			gard = garden;
+		}
+		
+		public Inventory getSavedInventory(){
+			return inven;
+		}
+		public void setStateInventory(Inventory inventory){
+			inven = inventory;
+		}
+		
 
 	}
 	public State gameState;
 	
 	public GameEngine() {
-		user = new Player();
+		
+		gameState = new State();
 		gui = new UserInterface(this);
-		createRooms();
 		gui.gameStart();
+		user = new Player();
+		
 	}
 
 
 	    	public void save(){
+	    	System.out.println("" + gameState.getSavedPlayer().getMoney());
+	    	gameState.setStatePlayer(user);
+	    	gameState.setStateGarden(garden);
+	    	gameState.setStateInventory(user.myInventory);
     		try{
     			//FileOutputStream saveFile = new FileOutputStream( "Libraries/Documents/sparat.sav" );
     			//ObjectOutputStream save = new ObjectOutputStream( saveFile );
     			//FileOutputStream saveFile = new FileOutputStream( "Libraries/Documents/" + gameState.player.getUserName() + ".sav" );
+    			
     			FileOutputStream saveFile = new FileOutputStream( "saves/" + gameState.player.getUserName() + ".sav" );
     			ObjectOutputStream save = new ObjectOutputStream( saveFile );
 
@@ -52,20 +82,24 @@ public class GameEngine {
     			
     			saveFile.close();
     			save.close();
+    			
+    			System.out.println("Sparar som: saves/" + gameState.player.getUserName() + ".sav");
     		}
     			
     		catch(Exception e){
     			e.printStackTrace();
-    			System.out.println("\nHoppsan, något gick fel!");
+    			System.out.println("\nHoppsan, något gick fel vid sparandet!");
     		}
 
     	}
     	
     	public void load(){
     		try{
+    			
     			//FileInputStream saveFile = new FileInputStream( "Libraries/Documents/sparat.sav" );
     			//ObjectInputStream load = new ObjectInputStream( saveFile );
     			//FileInputStream saveFile = new FileInputStream( "Libraries/Documents/" + gameState.player.getUserName() + ".sav" );
+    			
     			FileInputStream saveFile = new FileInputStream( "saves/" + gameState.player.getUserName() + ".sav" );
     			ObjectInputStream load = new ObjectInputStream( saveFile );
 
@@ -75,11 +109,23 @@ public class GameEngine {
     			
     			saveFile.close();
     			load.close();
+    			
+    			if( !(gameState.getSavedPlayer().equals(user)) ){
+    				user = gameState.getSavedPlayer();
+    				garden = gameState.getSavedGarden();
+    				user.myInventory = gameState.getSavedInventory();
+    				JOptionPane.showMessageDialog( null, "Din sparfil har laddats in!","yay!",JOptionPane.OK_CANCEL_OPTION);
+    			}
+    			else{
+    				JOptionPane.showMessageDialog( null, "Du är en ny spelare!","Ny spelare",JOptionPane.OK_CANCEL_OPTION);
+    			}
+    			
+    			System.out.println("Laddar: saves/" + gameState.player.getUserName() + ".sav");
     		}
     		
     		catch(Exception e){
     			e.printStackTrace();
-    			System.out.println("\nNämen, något gick fel!");
+    			System.out.println("\nNämen, något gick fel vid laddandet!");
     		}
 
     	}
@@ -109,7 +155,11 @@ public class GameEngine {
 		String name;
 		JOptionPane.showMessageDialog(gui.myFrame(), "Välkommen till vårt spel!!", "", JOptionPane.INFORMATION_MESSAGE);
 		name = JOptionPane.showInputDialog(gui.myFrame(), "Vad är ditt namn?", "", JOptionPane.QUESTION_MESSAGE);
-		user.setUserName(name);
+		
+		stateSetup(name);
+		
+		
+		
 	}
 	
 	private void createRooms() {
@@ -148,6 +198,28 @@ public class GameEngine {
 	 {
 		 setCurrentRoom(current);
 		 //setJPanelWithBackground(current.getPicture(engine.getCurrentRoom()));	//ex behöver getpicture ändras isåfall
+	 }
+	 
+	 public void stateSetup(String name){
+		 	user.setUserName(name);
+			gameState.setStatePlayer(user);
+			
+			
+			System.out.println("" + gameState.getSavedPlayer().getUserName());
+			load();	
+			
+			/*Player newPlayer = new Player();
+			newPlayer.setUserName(name);*/
+			/*
+			if( !(gameState.getSavedPlayer().equals(user)) ){
+				user = gameState.getSavedPlayer();
+				JOptionPane.showMessageDialog( null, "Din sparfil har laddats in!","yay!",JOptionPane.OK_CANCEL_OPTION);
+			}
+			else{
+				JOptionPane.showMessageDialog( null, "Du är en ny spelare!","Ny spelare",JOptionPane.OK_CANCEL_OPTION);
+			}*/
+			
+			createRooms();
 	 }
 	
 }

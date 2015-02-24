@@ -1,4 +1,5 @@
 package NyaProjektarbetet;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -8,7 +9,7 @@ import java.util.HashMap;
  *
  */
 
-public class Inventory {
+public class Inventory implements Serializable {
 	private HashMap<Item, Integer> items;
 	
 	public Inventory() {
@@ -21,7 +22,7 @@ public class Inventory {
 	}
 	
 	public void updateInventory(Item item, Integer amount) {
-		
+		items.put(item, amount);
 	}
 	
 	private void createInventory(){
@@ -33,3 +34,7 @@ public class Inventory {
 	}
 	
 }
+
+	
+	
+

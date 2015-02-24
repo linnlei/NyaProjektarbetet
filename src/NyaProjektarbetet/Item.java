@@ -1,6 +1,8 @@
 package NyaProjektarbetet;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable{
 	
 	private int price;
 	private int level;
