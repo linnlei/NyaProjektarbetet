@@ -1,4 +1,10 @@
 package NyaProjektarbetet;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import javax.swing.*;
 
 /**
@@ -15,12 +21,68 @@ public class GameEngine {
 	public Shop shop;
 	public Room center, garden, minigame1;
 	
+	public static class State implements Serializable{
+		//Player, Garden, Inventory ska vara Serializable för att kunna skrivas till fil
+		Player player = new Player();
+		Garden gard = new Garden();
+		Inventory inven = new Inventory();
+
+	}
+	public State gameState;
+	
 	public GameEngine() {
 		user = new Player();
 		gui = new UserInterface(this);
 		createRooms();
 		gui.gameStart();
 	}
+
+
+	    	public void save(){
+    		try{
+    			//FileOutputStream saveFile = new FileOutputStream( "Libraries/Documents/sparat.sav" );
+    			//ObjectOutputStream save = new ObjectOutputStream( saveFile );
+    			//FileOutputStream saveFile = new FileOutputStream( "Libraries/Documents/" + gameState.player.getUserName() + ".sav" );
+    			FileOutputStream saveFile = new FileOutputStream( "saves/" + gameState.player.getUserName() + ".sav" );
+    			ObjectOutputStream save = new ObjectOutputStream( saveFile );
+
+    			save.writeObject( gameState.player );
+    			save.writeObject( gameState.gard );
+    			save.writeObject( gameState.inven );
+    			
+    			saveFile.close();
+    			save.close();
+    		}
+    			
+    		catch(Exception e){
+    			e.printStackTrace();
+    			System.out.println("\nHoppsan, något gick fel!");
+    		}
+
+    	}
+    	
+    	public void load(){
+    		try{
+    			//FileInputStream saveFile = new FileInputStream( "Libraries/Documents/sparat.sav" );
+    			//ObjectInputStream load = new ObjectInputStream( saveFile );
+    			//FileInputStream saveFile = new FileInputStream( "Libraries/Documents/" + gameState.player.getUserName() + ".sav" );
+    			FileInputStream saveFile = new FileInputStream( "saves/" + gameState.player.getUserName() + ".sav" );
+    			ObjectInputStream load = new ObjectInputStream( saveFile );
+
+    			gameState.player = (Player) load.readObject();
+    			gameState.gard = (Garden) load.readObject();
+    			gameState.inven = (Inventory) load.readObject();
+    			
+    			saveFile.close();
+    			load.close();
+    		}
+    		
+    		catch(Exception e){
+    			e.printStackTrace();
+    			System.out.println("\nNämen, något gick fel!");
+    		}
+
+    	}
 	
 	public String getCurrent() {
 		return current;

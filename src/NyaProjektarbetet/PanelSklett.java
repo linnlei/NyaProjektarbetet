@@ -10,24 +10,49 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/*
+import minTestzon.Center;
+import minTestzon.GameEngine;
+import minTestzon.Garden;
+import minTestzon.GardenController;
+import minTestzon.Inventory;
+import minTestzon.MiniGame;
+import minTestzon.Room;
+import minTestzon.Shop;
+import minTestzon.UserInterface;*/
 
-public class PanelSklett {
+
+public class PanelSklett implements Observer{
 	private GameEngine engine;
 	private JPanel panelClickable;
 	private UserInterface ui;
 	private ShopController shopControl;
 	private ArrayList<JButton> itemButtons = new ArrayList<JButton>();
 	
-	//public Room center;
-	//public Shop shop;
-	//public Room garden;
-	//public Room miniGame1;
+	/*public Room center;
+	public Room shop;
+	public Room garden;
+	public Room miniGame1;
+	public Room miniGame2;*/
+
+	public GardenController gardenController;
+	public Inventory in = new Inventory();
+	JButton itemsLeft = null;
+	
+	//*******Experiment
+	JButton kurt;
+	String ex;
+	
 	
 	public PanelSklett(GameEngine e, UserInterface ui)
 	{
@@ -37,6 +62,14 @@ public class PanelSklett {
 		garden = new Garden();		
 		miniGame1 = new MiniGame();	*/
 		shopControl = new ShopController(engine, this);
+		/*
+		center = new Center();
+		shop = new Shop();
+		garden = new Garden();
+		miniGame1 = new MiniGame();*/
+		
+		gardenController = new GardenController(engine.garden, in, engine);
+		gardenController.addObserver(this);
 	}
 	
 	private JPanel getInventoryPanel()
@@ -245,6 +278,200 @@ public class PanelSklett {
 		JPanel panel = new JPanel(); 
 		panel.setOpaque(false);
 	    panel.setLayout(null);
+	    JPanel showInventory;
+	    
+	    int rad = 0;
+	    int column =0;
+	    int lopnr=0;
+	    
+	    
+	    HashMap<ImageIcon, Integer> inventory = gardenController.getInventory();
+        Set<Entry<ImageIcon, Integer>> pairs = inventory.entrySet();
+	    
+	    // Det osynlliga rutnätet med knappar
+	    
+	    for( int j=0;j<37;j++){    	
+	    		    
+		    for( int i=0;i<23;i++)
+		    {
+		    	lopnr++;// Varje knapp får ett eget nummer			    		    
+			    final int nr = lopnr;
+			    
+			    String s = "buildable"; // Kom ihåg om det finns en tegelsten här eller inte...
+			    if(gardenController.getIcon(nr)!= null)  s= "unbuildable";
+			    final String startState = s;
+			    
+			    			     
+		    	final ImageIcon icon3= gardenController.getIcon(nr);
+		    	
+		    	
+			    
+			    final JButton clickButton = new JButton(icon3);
+			    //setResizable(false);// Testa senare
+			    clickButton.setBounds(column,rad,30,30);
+			    clickButton.setContentAreaFilled(false);//Osynlighet
+			    clickButton.setBorderPainted(false);//Osynlighet
+			    clickButton.addActionListener(new ActionListener() {
+			    	
+			    	String state = startState;
+			    	ImageIcon takenImage; 
+			    	//String state ="buildable";
+			    	@Override
+					public void actionPerformed(ActionEvent arg0) {
+			    		
+			    		
+						if(state.equals("buildable"))
+						{
+							takenImage = gardenController.getTakenImage();
+							if(takenImage!=null)
+							{
+								state="unbuildable";
+								//System.out.println("Bilden som följde med till Panelskletts rutnät är: : " +takenImage );
+								clickButton.setIcon(takenImage);
+								gardenController.build(nr);
+								takenImage = null;
+							}
+														
+						}
+	
+						else if(state.equals("unbuildable"))
+					    {
+							state="buildable";
+							clickButton.setIcon(null);
+							clickButton.setContentAreaFilled(false);
+							gardenController.remove(nr);
+						}
+					}
+					
+			    });	
+					
+			    panel.add(clickButton);
+			    
+			    rad = rad + 30;
+			    			   	    		    
+		    }
+		   
+		    column = column + 30;
+		    rad =0;
+						   	    		    
+		}
+	  //**************************************************************************************************** 	
+	    
+	    //Panelen vid sidan av rutnätet
+	    showInventory = new JPanel();
+	    showInventory.setLayout(null);
+	    showInventory.setBounds(1110,0, 81, 1000);
+	    
+	    // Nollställer för ny loop
+	     rad = 30;
+	     column = 30;
+	   
+	 
+	        
+	   
+	        //Fixar fram det som ska visas på sidopanelen
+	        for(Entry<ImageIcon, Integer> entry: pairs){
+	    	
+	    	// Visa bild på tillgänliga Item
+	    	final ImageIcon imageOfItem = entry.getKey();
+	    	//System.out.println("imageOfItem i sidopanelen" +imageOfItem );
+	    	final JButton showItem;
+	    	showItem = new JButton(imageOfItem);
+		    showItem.setBounds(column, rad,30,30);
+		    
+		    //Vad bildknappen ska göra
+		    
+		    showItem.addActionListener(new ActionListener() {
+		    	    	
+		    	@Override
+				public void actionPerformed(ActionEvent arg0) {
+											
+						gardenController.take(imageOfItem);
+						//System.out.println("Tagen bild i sidopanelen är: " +imageOfItem );
+				}
+				
+		    });	
+		    
+		    // Visa antal  tillgänliga Items
+		    int x =entry.getValue();
+		    itemsLeft = new JButton();
+		    itemsLeft.setText("" + x);
+		    itemsLeft.setBounds(column-15, rad+30,60,30);
+		    itemsLeft.setContentAreaFilled(false);//Osynlighet
+		    itemsLeft.setBorderPainted(false);//Osynlighet
+		    
+		     
+		    //*****************************************************************
+		    
+		   
+		   		    
+		    //Lägg till bild och antal 
+		    showInventory.add(showItem);
+		    //showInventory.add(itemsLeft);
+		    
+		    // Byt till ny position
+		    rad= rad +60;
+	    }
+	        
+	        //**************Experiment********************
+		   
+		    kurt = new JButton();
+		    kurt.setBounds(0,rad +30 ,100,30);
+		    kurt.setContentAreaFilled(false);//Osynlighet
+		    kurt.setBorderPainted(false);//Osynlighet
+		    
+		    showInventory.add(kurt);
+		    
+		    
+		   //*****************************************************************
+		    
+	     panel.add(showInventory);
+	     return panel;
+	     
+	}
+	
+	
+	
+	private JPanel createMiniGamePanel()
+	{
+		JPanel panel = new JPanel();
+		
+		panel.setOpaque(false);
+	    panel.setLayout(null);
+		
+		return panel;
+		
+	}
+	
+	private JPanel createInventoryPanel()
+	{
+		JPanel panel = new JPanel();	
+		panel.setOpaque(false);
+	    panel.setLayout(null);
+		
+		return panel;
+		
+	}
+	
+	public void update(Observable obj, Object arg)
+	{
+		if(obj instanceof GardenController && arg instanceof Integer)
+			//itemsLeft.setText("" + arg);
+			kurt.setText("kvar:"+ arg);
+			
+	}
+	
+}
+	
+	
+	
+	
+	/*
+	private JPanel createGardenPanel()
+	{
+		JPanel panel = new JPanel(); 
+		panel.setOpaque(false);
+	    panel.setLayout(null);
 	    int rad = 0;
 	    int column =0;
 	    int i =0;
@@ -299,7 +526,7 @@ public class PanelSklett {
 			    
 			    rad = rad + 30;
 			    			   	    		    
-		    }*/
+		    }
 		    column = column + 30;
 		    i=0;
 		    rad =0;
@@ -331,6 +558,6 @@ public class PanelSklett {
 	}
 	
 	
-}
+}*/
 
 

@@ -1,6 +1,8 @@
 package NyaProjektarbetet;
 
-//import javax.swing.JPanel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 public class Room {
 	//Tillfällig kod för att det ska kompilera
@@ -42,6 +44,23 @@ public class Room {
 		}
 		
 	}
+		
+		
+		public void addItem(int lopnr, ImageIcon icon)
+		{
+			
+		}
+		
+		public void removeItem(int lopnr)
+		{
+			
+		}
+		
+		public ImageIcon getGardenIcon(int lopnr)
+		{
+			return null;
+		}
+	    
 
 	//Onödig!!
 	/*public JPanel getRoomPanel(String current)
